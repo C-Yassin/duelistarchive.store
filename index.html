@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duelist Archive - Offline Yu-Gi-Oh! Database</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 650px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+        }
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+        h1 span {
+            color: #60a5fa;
+        }
+        .tagline {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        .feature-item {
+            background: #1e293b;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+        .feature-item strong {
+            display: block;
+            color: #f8fafc;
+            margin-bottom: 4px;
+        }
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 1px solid #334155;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background-color: #334155;
+            border-color: #475569;
+        }
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        .footer {
+            border-top: 1px solid #1e293b;
+            padding-top: 20px;
+            font-size: 0.8rem;
+            color: #64748b;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .footer-links {
+            display: flex;
+            gap: 16px;
+        }
+        .footer a {
+            color: #94a3b8;
+            text-decoration: underline;
+        }
+        .footer a:hover {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Duelist <span>Archive</span></h1>
+        <p class="tagline">The definitive, forever-offline Yu-Gi-Oh! card archive and live market estimation tool built for mobile duelists everywhere.</p>
+
+        <div class="features">
+            <div class="feature-item">
+                <strong>100% Offline Database</strong>
+                Access card details, stats, and text anytime without requiring an active internet connection.
+            </div>
+            <div class="feature-item">
+                <strong>Market Estimations</strong>
+                Track and review live pricing data and market estimates effortlessly.
+            </div>
+        </div>
+
+        <div class="button-group">
+            <!-- Google Play Button -->
+            <a href="https://play.google.com/store/apps/details?id=com.c_yassin.duelistarchive" class="btn">
+                <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a1.354 1.354 0 0 1-.36-.935V2.749c0-.363.13-.701.359-.935zM15.207 13.414l2.122 2.122-10.43 6.023a1.23 1.23 0 0 1-1.23 0l9.538-8.145zm0-2.828L5.669 2.441a1.23 1.23 0 0 1 1.23 0l10.43 6.023-2.122 2.122zM16.629 12l2.353-2.353 2.766 1.597c.725.419.725 1.102 0 1.521l-2.766 1.597L16.629 12z"/></svg>
+                Google Play
+            </a>
+
+            <!-- Amazon Appstore Button -->
+            <a href="https://www.amazon.com/gp/product/B0H7XWF5NR" class="btn">
+                <svg viewBox="0 0 24 24"><path d="M15.93 17.09c-.31-.05-.48-.28-.5-.59-.06-.82.16-1.92-.81-2.46-.86-.48-1.96-.34-2.89.04-1.22.5-2.28 1.38-3.1 2.37-.18.22-.05.51.22.56.34.06.69-.14.94-.36.96-.86 2.08-1.57 3.32-1.78.69-.12 1.39-.02 1.94.38.45.33.67.87.52 1.42-.09.33-.29.5-.6 0zM19.07 13.75c-1.39-1.04-3.41-1.59-5.18-1.05-.42.13-.86.3-1.27.46-.38.15-.75.31-1.14.39-.42.08-.85-.01-1.18-.28-.2-.17-.4-.36-.57-.56-.23-.27-.12-.66.21-.77 1.05-.36 2.18-.46 3.28-.27 1.38.24 2.69.83 3.85 1.62.29.2.37.58.18.89-.19.3-.59.39-.88.01zM19.73 10.44c-.75-.68-1.63-1.25-2.58-1.66-.46-.2-.93-.38-1.42-.51-.35-.09-.54-.36-.45-.69.09-.33.36-.51.71-.41.56.15 1.11.36 1.65.6 1.12.5 2.17 1.18 3.12 1.99.28.24.32.65.09.94-.23.29-.64.33-.92.05-.22-.19-.44-.39-.67-.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8 z"/></svg>
+                Amazon Appstore
+            </a>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://c-yassin.github.io/duelist-archive-privacy/">Privacy Policy</a>
+            </div>
+            <div>
+                Support: <a href="mailto:c.yassin.org@gmail.com">c.yassin.org@gmail.com</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
