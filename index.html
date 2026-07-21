@@ -5,154 +5,473 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Duelist Archive - Offline Yu-Gi-Oh! Database</title>
     <style>
-        body {
+        :root {
+            --bg-base: #020617;
+            --bg-surface: #0f172a;
+            --bg-surface-hover: #1e293b;
+            --border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --gradient-text: linear-gradient(to right, #60a5fa, #a78bfa);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #020617;
-            color: #f8fafc;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        #card-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        .floating-card {
+            position: absolute;
+            bottom: -300px;
+            border-radius: 6px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            will-change: transform;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(-15deg); }
+            100% { transform: translateY(-150vh) rotate(20deg); }
+        }
+
+        /* --- Navbar --- */
+        .navbar {
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
+            padding: 20px 5%;
+            background: rgba(2, 6, 23, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
         }
-        .container {
-            max-width: 650px;
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
-        }
-        h1 {
-            font-size: 2.25rem;
+
+        .nav-brand {
+            font-size: 1.25rem;
             font-weight: 800;
-            margin-bottom: 10px;
             letter-spacing: -0.025em;
         }
-        h1 span {
-            color: #60a5fa;
+
+        .nav-brand span {
+            color: var(--accent);
         }
-        .tagline {
-            color: #94a3b8;
-            font-size: 1.05rem;
-            line-height: 1.6;
+
+        .nav-links a {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        .hero {
+            position: relative;
+            padding: 160px 5% 100px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.7) 0%, rgba(2, 6, 23, 0.95) 70%);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
             margin-bottom: 24px;
+            letter-spacing: -0.025em;
+            max-width: 800px;
         }
-        .features {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 32px;
-            text-align: left;
+
+        .hero h1 span {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .feature-item {
-            background: #1e293b;
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            border: 1px solid #334155;
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
         }
-        .feature-item strong {
-            display: block;
-            color: #f8fafc;
-            margin-bottom: 4px;
-        }
+
         .button-group {
             display: flex;
             gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 32px;
         }
+
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background-color: #1e293b;
-            color: #ffffff;
-            padding: 12px 20px;
+            gap: 12px;
+            background-color: var(--bg-surface);
+            color: var(--text-main);
+            padding: 14px 28px;
             border-radius: 12px;
-            text-decoration: none;
             font-weight: 600;
-            font-size: 0.875rem;
-            border: 1px solid #334155;
-            transition: all 0.2s;
+            font-size: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+
         .btn:hover {
-            background-color: #334155;
-            border-color: #475569;
+            background-color: var(--bg-surface-hover);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
         }
+
         .btn svg {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             fill: currentColor;
         }
+        .features-section {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 48px;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            padding: 32px;
+            border-radius: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
         .footer {
-            border-top: 1px solid #1e293b;
-            padding-top: 20px;
-            font-size: 0.8rem;
-            color: #64748b;
+            border-top: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 40px 5%;
+            margin-top: 60px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
             align-items: center;
+            gap: 24px;
+            text-align: center;
+            background: rgba(2, 6, 23, 0.8);
+            position: relative;
+            z-index: 10;
         }
+
+        .footer-brand {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
         .footer-links {
             display: flex;
-            gap: 16px;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        .footer a {
-            color: #94a3b8;
-            text-decoration: underline;
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: color 0.2s;
         }
-        .footer a:hover {
-            color: #60a5fa;
+
+        .footer-links a:hover {
+            color: var(--text-main);
         }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up {
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Duelist <span>Archive</span></h1>
-        <p class="tagline">The definitive, forever-offline Yu-Gi-Oh! card archive and live market estimation tool built for mobile duelists everywhere.</p>
 
-        <div class="features">
-            <div class="feature-item">
-                <strong>100% Offline Database</strong>
-                Access card details, stats, and text anytime without requiring an active internet connection.
-            </div>
-            <div class="feature-item">
-                <strong>Market Estimations</strong>
-                Track and review live pricing data and market estimates effortlessly.
-            </div>
+    <div id="card-background"></div>
+
+    <nav class="navbar">
+        <div class="nav-brand">Duelist <span>Archive</span></div>
+        <div class="nav-links">
+            <a href="mailto:c.yassin.org@gmail.com">Support</a>
         </div>
+    </nav>
 
-        <div class="button-group">
-            <!-- Google Play Button -->
+    <header class="hero">
+        <h1 class="animate-up">Master the Game. <br><span>Anywhere, Anytime.</span></h1>
+        <p class="animate-up delay-1">The definitive, Yu-Gi-Oh! card archive and live market estimation tool built for mobile duelists everywhere.</p>
+        
+        <div class="button-group animate-up delay-2">
             <a href="https://play.google.com/store/apps/details?id=com.c_yassin.duelistarchive" class="btn">
                 <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a1.354 1.354 0 0 1-.36-.935V2.749c0-.363.13-.701.359-.935zM15.207 13.414l2.122 2.122-10.43 6.023a1.23 1.23 0 0 1-1.23 0l9.538-8.145zm0-2.828L5.669 2.441a1.23 1.23 0 0 1 1.23 0l10.43 6.023-2.122 2.122zM16.629 12l2.353-2.353 2.766 1.597c.725.419.725 1.102 0 1.521l-2.766 1.597L16.629 12z"/></svg>
                 Google Play
             </a>
-
-            <!-- Amazon Appstore Button -->
             <a href="https://www.amazon.com/gp/product/B0H7XWF5NR" class="btn">
                 <svg viewBox="0 0 24 24"><path d="M15.93 17.09c-.31-.05-.48-.28-.5-.59-.06-.82.16-1.92-.81-2.46-.86-.48-1.96-.34-2.89.04-1.22.5-2.28 1.38-3.1 2.37-.18.22-.05.51.22.56.34.06.69-.14.94-.36.96-.86 2.08-1.57 3.32-1.78.69-.12 1.39-.02 1.94.38.45.33.67.87.52 1.42-.09.33-.29.5-.6 0zM19.07 13.75c-1.39-1.04-3.41-1.59-5.18-1.05-.42.13-.86.3-1.27.46-.38.15-.75.31-1.14.39-.42.08-.85-.01-1.18-.28-.2-.17-.4-.36-.57-.56-.23-.27-.12-.66.21-.77 1.05-.36 2.18-.46 3.28-.27 1.38.24 2.69.83 3.85 1.62.29.2.37.58.18.89-.19.3-.59.39-.88.01zM19.73 10.44c-.75-.68-1.63-1.25-2.58-1.66-.46-.2-.93-.38-1.42-.51-.35-.09-.54-.36-.45-.69.09-.33.36-.51.71-.41.56.15 1.11.36 1.65.6 1.12.5 2.17 1.18 3.12 1.99.28.24.32.65.09.94-.23.29-.64.33-.92.05-.22-.19-.44-.39-.67-.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8 z"/></svg>
                 Amazon Appstore
             </a>
         </div>
+    </header>
 
-        <div class="footer">
-            <div class="footer-links">
-                <a href="https://c-yassin.github.io/duelist-archive-privacy/">Privacy Policy</a>
+    <section class="features-section">
+        <h2 class="section-title">Everything a Duelist Needs</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12V7H3v5"></path>
+                        <path d="M3 12v5h18v-5"></path>
+                        <path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2"></path>
+                        <path d="M9 17h6"></path>
+                        <path d="M9 12h6"></path>
+                    </svg>
+                </div>
+                <h3>All in one Database</h3>
+                <p>Access comprehensive card details, rulings, stats, and text anytime, anywhere—without requiring an active internet connection or burning through data.</p>
             </div>
-            <div>
-                Support: <a href="mailto:c.yassin.org@gmail.com">c.yassin.org@gmail.com</a>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <h3>Live Market Estimations</h3>
+                <p>Stay ahead of the meta and the economy. Track and review live pricing data and market estimates effortlessly whenever you reconnect to the grid.</p>
             </div>
         </div>
-    </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-brand">Duelist Archive</div>
+        <div class="footer-links">
+            <a href="https://c-yassin.github.io/duelist-archive-privacy/">Privacy Policy</a>
+            <a href="mailto:c.yassin.org@gmail.com">Contact Support</a>
+        </div>
+        <p class="copyright">© 2026 Duelist Archive. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const repoUrl = "https://api.github.com/repos/C-Yassin/Duelist-Archive-imgs/contents/cards";
+
+        async function loadBackgroundCards() {
+            const bgContainer = document.getElementById('card-background');
+            const numCards = 15;
+            
+            try {
+                const response = await fetch(repoUrl);
+                if (!response.ok) throw new Error("API Limit Reached or Repo Not Found");
+                
+                const files = await response.json();
+                const images = files.filter(file => file.name.endsWith('.webp'));
+                
+                if (images.length === 0) return;
+
+                for(let i = 0; i < numCards; i++) {
+                    const randomImage = images[Math.floor(Math.random() * images.length)];
+                    createFloatingCard(randomImage.download_url, bgContainer);
+                }
+            } catch (error) {
+                console.warn("Could not fetch repo contents (API limit likely). Using fallback static card IDs.");
+                const fallbackIds = [
+                    '10000', '10000000', '10000001', '10000002', '10000010', '100000101', '10000011', '10000012', 
+                    '10000020', '10000021', '10000022', '10000030', '10000040', '10000080', '10000090', '10002346', 
+                    '10004783', '10012614', '10019086', '100200291', '100200292', '100200293', '100200294', '100200295', 
+                    '10024317', '10026986', '10028593', '100295121', '100296302', '1003028', '10032958', '100350262', 
+                    '10035717', '1003840', '10040267', '10045474', '100455007', '100456001', '100456002', '100456003', 
+                    '100456004', '100456005', '100456006', '100456007', '100456008', '100456009', '100456010', '100457001', 
+                    '100457102', '100457103', '100457104', '100457105', '100458001', '100458002', '100458003', '100458004', 
+                    '100458005', '100458006', '100458007', '100458009', '100458010', '100458011', '1005587', '10060427', 
+                    '1006081', '10065487', '10069180', '10071151', '10071456', '10080320', '10097168', '10110717', 
+                    '10113611', '10117149', '10118318', '101206080', '10125011', '101303071', '101303084', '101304014', 
+                    '101305081', '101305082', '101305083', '101305084', '101305085', '101305086', '101305087', '101305088', 
+                    '101305089', '101305090', '101305091', '101305092', '101305093', '101305094', '101305095', '101305096', 
+                    '10131855', '10132124', '10136446', '101402001', '101402002', '101402003', '101402004', '101402005', 
+                    '101402006', '101402007', '101402008', '101402009', '101402010', '101402011', '101402012', '101402013', 
+                    '101402014', '101402015', '101402016', '101402017', '101402018', '101402019', '101402020', '101402021', 
+                    '101402022', '101402023', '101402024', '101402025', '101402026', '101402027', '101402028', '101402029', 
+                    '101402031', '101402032', '101402033', '101402034', '101402035', '101402036', '101402037', '101402038', 
+                    '101402039', '101402040', '101402041', '101402042', '101402043', '101402045', '101402047', '101402048', 
+                    '101402049', '101402050', '101402051', '101402052', '101402053', '101402054', '101402055', '101402056', 
+                    '101402057', '101402058', '101402059', '101402060', '101402061', '101402062', '101402063', '101402064', 
+                    '101402065', '101402066', '101402067', '101402068', '101402069', '101402070', '101402071', '101402072', 
+                    '101402073', '101402074', '101402075', '101402076', '101402077', '101402078', '101402079', '101402080', 
+                    '10140443', '10158145', '10163855', '10178757', '10182251', '10186633', '10189126', '10194329', 
+                    '10202894', '10204849', '10209545', '10218411', '10236520', '102380', '10239627', '10248192', 
+                    '10248389', '10262698', '10266279', '10275411', '10282757', '10286023', '10300821', '10307853', 
+                    '10312660', '10315429', '10321588', '1033312', '10333641', '1035143', '10352095', '10365322', 
+                    '1036974', '10375182', '10383554', '10389142', '10389143', '10389794', '10406322', '1041278', 
+                    '10424147', '10426067', '10441498', '10443957', '10443958', '10449150', '1045143', '10456559', 
+                    '1047075', '10474647', '10476868', '10485110', '10489311', '10493654', '10497636', '1050186', 
+                    '1050355', '10505300', '1050684', '10509340', '10515412', '10526791', '10529441', '10530913', 
+                    '10532969', '10537981', '10538007', '10547580', '10552026', '10560119', '10584050', '10591919', 
+                    '10598400', '10602628', '10604644', '1061200', '10612222', '10613952', '10632284', '10642488', 
+                    '10651797', '10666000', '10667321', '10669138', '10673071', '10678778', '10691144', '10698416', 
+                    '10705656', '10712320', '10719350', '10723472', '10731333', '10732060', '10736540', '1073952', 
+                    '10753491', '10755153', '10755984', '10759529', '10774240', '10780049', '10789972', '10793085', 
+                    '10796448', '10802915', '10802916', '10804018', '10805153', '10807219', '10808715', '10809984', 
+                    '10813327', '10817524', '1082946', '10833828', '10851853', '10852583', '10859908', '10860121', 
+                    '10875327', '10877309', '10920352', '10925955', '10928224', '10938846', '109401', '10949074', 
+                    '10960419', '10963799', '10966439', '10971759', '10979723', '10992251', '11012154', '11012887', 
+                    '11020863', '11021521', '11024707', '1102515', '11035075', '11039171', '11047543', '11050415', 
+                    '11050416', '11050417', '11050418', '11050419', '11052544', '11066358', '11067666', '11069680', 
+                    '11074235', '11082056', '11091375', '111000561', '11102908', '11109820', '11110218', '11110587', 
+                    '11125718', '111280', '11132674', '11136371', '11155484', '11159464', '11161666', '11163040', 
+                    '11167052', '1118137', '11193246', '11212437', '1122030', '11221418', '11224103', '11224934', 
+                    '11228035', '11232355', '11234702', '11248645', '11250655', '11260714', '11264180', '11270236', 
+                    '1127737', '11287364', '11302671', '11317977', '11321089', '11321183', '11324436', '11327848', 
+                    '11335209', '11366199', '11373345', '11375683', '11384280', '11390349', '11398059', '11398951', 
+                    '11411223', '11426487', '1142880', '11429811', '11434258', '11439455', '11441009', '11443677', 
+                    '11448373', '11449436', '11458071', '11460577', '11464648', '11471117', '11475049', '11481610', 
+                    '11489642', '1149109', '114932', '11493868', '11496832', '11501629', '11502550', '11508758', 
+                    '11510448', '1151281', '11516241', '11522479', '11522979', '1154611', '11548522', '11549357', 
+                    '11556339', '1157683', '11587414', '11590299', '11593137', '11596936', '11609969', '11613567', 
+                    '11637481', '1164211', '11642993', '11646785', '11654067', '11662742', '11674673', '11677278', 
+                    '11678191', '11682713', '11685347', '11688916', '11699941', '11705261', '11711438', '11714098', 
+                    '11722335', '11738489', '1174075', '11741041', '11743119', '11747708', '11755663', '11759079', 
+                    '11760174', '11761845', '11765832', '11790356', '11793047', '11801343', '11802691', '11808215', 
+                    '11813722', '11813953', '11819473', '11819616', '11825276', '11827244', '11830996', '11834972', 
+                    '11845050', '1184620', '11851647', '11852093', '1186447', '11868731', '11868825', '1187243', 
+                    '11877465', '11881272', '11895663', '11901678', '11908584', '11911336', '11913700', '11925569', 
+                    '11954712', '11958188', '11961740', '11962031', '11969228', '11975962', '1197847', '11987744', 
+                    '1200843', '12014404', '12015000', '12018201', '12021072', '12023931', '12057781', '12058741', 
+                    '12061457', '12067160', '12071500', '12076263', '12079734', '12081875', '12097275', '12117532', 
+                    '12143771', '12146024', '12148078', '12152769', '12157563', '12160911', '12163590', '12171659', 
+                    '12172567', '12174035', '12181376', '1218214', '12183332', '12196873', '12197223', '12197543', 
+                    '12206212', '12210097', '12213463', '12215894', '12216615', '12219047', '12235475', '12247206', 
+                    '1224927', '1225009', '122520', '12253117', '12255007', '12262393', '12266229', '12275533', 
+                    '12289247', '12292422', '12296376', '12298909', '12299841', '12307878', '12324546', '12332865', 
+                    '12338068', '12369277', '123709', '12375297', '12381100', '12385638', '12397569', '12398280', 
+                    '12408276', '12421694', '12423762', '12435193', '12436646', '12444060', '12450071', '12451640'
+                ];
+                for(let i = 0; i < numCards; i++) {
+                    const randomId = fallbackIds[Math.floor(Math.random() * fallbackIds.length)];
+                    const url = `https://raw.githubusercontent.com/C-Yassin/Duelist-Archive-imgs/main/cards/${randomId}.webp`;
+                    createFloatingCard(url, bgContainer);
+                }
+            }
+        }
+
+        function createFloatingCard(url, container) {
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'floating-card';
+            
+            const size = Math.random() * 80 + 100;
+            const leftPosition = Math.random() * 95;
+            const animationDuration = Math.random() * 30 + 25;
+            const animationDelay = Math.random() * -50;
+            const baseRotation = (Math.random() - 0.5) * 40;
+
+            img.style.width = `${size}px`;
+            img.style.left = `${leftPosition}%`;
+            img.style.animationDuration = `${animationDuration}s`;
+            img.style.animationDelay = `${animationDelay}s`;
+            img.style.transform = `rotate(${baseRotation}deg)`;
+
+            container.appendChild(img);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBackgroundCards);
+    </script>
 </body>
 </html>
